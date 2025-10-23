@@ -14,3 +14,15 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Python
+__pycache__
+*.dblite
+
+# VSCode
+.vscode
+
+# C/C++
+*.os
+*.so
+*.dl
