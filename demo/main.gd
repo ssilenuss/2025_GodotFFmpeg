@@ -7,7 +7,7 @@ extends Control
 var video : Video = Video.new()
 
 
-var video_path : String = "/Users/kmt/Desktop/test2.mp4"
+var video_path : String = "/Volumes/NO NAME/test2.mp4"
 var is_playing: bool = false
 
 var current_frame: int = 1
@@ -59,11 +59,16 @@ func go_to_next_frame()->void:
 	
 	while time_elapsed >= frame_time:
 		time_elapsed -= frame_time
-		current_frame += 1
+		
 	
 	var image : Image = video.next_frame()
+	current_frame += 1
 	if not image.is_empty():
+		modulate = Color.WHITE
 		texture_rect.texture.set_image(image)
+	else:
+		modulate = Color.RED
+		
 		
 	if not timeline_dragging:
 		timeline.value = current_frame
@@ -86,7 +91,15 @@ func _on_play_pause_button_pressed() -> void:
 	
 	is_playing = !is_playing
 	if is_playing:
-		audio_player.play()
+		if current_frame == 1:
+			audio_player.play()
+		else:
+			print("audio is playing: ", audio_player.is_playing())
+			if audio_player.is_playing():
+				audio_player.set_stream_paused(false)
+			else:
+				audio_player.play()
+				audio_player.seek(current_frame)
 	else:
 		audio_player.set_stream_paused(true)
 
