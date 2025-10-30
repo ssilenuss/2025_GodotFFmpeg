@@ -573,7 +573,7 @@ void Video::_get_total_frame_nr(){
 	frame_timestamp = (long)(total_frame_nr * average_frame_duration);
 
 	//Video Seeking
-	response = av_seek_frame(av_format_ctx, -1, start_time_video+frame_timestamp, AVSEEK_FLAG_FRAME | AVSEEK_FLAG_BACKWARD);
+	response = av_seek_frame(av_format_ctx, -1, (start_time_video+frame_timestamp)/10, AVSEEK_FLAG_FRAME | AVSEEK_FLAG_BACKWARD);
 	avcodec_flush_buffers(av_codec_ctx_video);
 	if (response < 0){
 		UtilityFunctions::printerr("VCan't seek video stream!");
