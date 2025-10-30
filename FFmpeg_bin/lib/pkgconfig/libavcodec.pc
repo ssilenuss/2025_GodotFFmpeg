@@ -1,0 +1,14 @@
+prefix=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin
+exec_prefix=${prefix}
+libdir=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/lib
+includedir=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 60.31.102
+Requires: 
+Requires.private: libswresample >= 4.12.100, libavutil >= 58.29.100
+Conflicts:
+Libs: -L${libdir}  -lavcodec 
+Libs.private: -liconv -lm -llzma -framework AudioToolbox -pthread -lz -framework VideoToolbox -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework CoreServices
+Cflags: -I${includedir}

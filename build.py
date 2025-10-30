@@ -1,6 +1,12 @@
 import os
 import subprocess
 
+#after first clone
+#git submodule update --init --recursive
+
+#to update submodules
+#git submodule update --recursive --remote
+
 #Build Godot_CPP
 #os.chdir("godot-cpp")
 #os.system("scons -j 8 target=template_debug")
