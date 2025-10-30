@@ -58,4 +58,5 @@ text = "PLAY/PAUSE"
 layout_mode = 2
 
 [connection signal="drag_ended" from="VBoxContainer/Timeline" to="." method="_on_timeline_drag_ended"]
+[connection signal="drag_started" from="VBoxContainer/Timeline" to="." method="_on_timeline_drag_started"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayPauseButton" to="." method="_on_play_pause_button_pressed"]
