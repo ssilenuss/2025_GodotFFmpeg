@@ -1,5 +1,5 @@
-#ifndef VIDEOPLAYER_REGISTER_TYPES_H
-#define VIDEOPLAYER_REGISTER_TYPES_H
+#ifndef VIDEO_REGISTER_TYPES_H
+#define VIDEO_REGISTER_TYPES_H
 
 #include <godot_cpp/core/class_db.hpp>
 
@@ -8,4 +8,4 @@ using namespace godot;
 void initialize_example_module(ModuleInitializationLevel p_level);
 void uninitialize_example_module(ModuleInitializationLevel p_level);
 
-#endif // VIDEOPLAYER_REGISTER_TYPES_H
+#endif // VIDEO_REGISTER_TYPES_H

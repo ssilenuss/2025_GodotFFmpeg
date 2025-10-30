@@ -13,12 +13,36 @@ env = SConscript("godot-cpp/SConstruct")
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/"])
+
+env.Append(CPPPATH=[
+    "src/"])
+
+#FFmpeg stuff:
+
+env.Append(LIBS=[
+    'avcodec',
+    'avformat',
+    'avfilter',
+    'avdevice',
+    'avutil',
+    'swscale',
+    'swresample' ] )
+
+env.Append(CPPPATH=[
+    "FFmpeg_bin/include"])
+
+
+# it was "FFmpeg_bin/lib" in the tutorial, 11:15 https://www.youtube.com/watch?v=faiBUPr3_e4&list=PL8opQePBSY5mr2Fup2mqc-4cMBxxaqvMg&index=3, 
+env.Append(LIBPATH=[
+    "FFmpeg_bin/lib"])
+
+
 sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
+
     library = env.SharedLibrary(
-        "demo/bin/libvideoplayer.{}.{}.framework/libvideoplayer.{}.{}".format(
+        "demo/bin/libvideo.{}.{}.framework/libvideo.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
@@ -26,17 +50,17 @@ if env["platform"] == "macos":
 elif env["platform"] == "ios":
     if env["ios_simulator"]:
         library = env.StaticLibrary(
-            "demo/bin/libvideoplayer.{}.{}.simulator.a".format(env["platform"], env["target"]),
+            "demo/bin/libvideo.{}.{}.simulator.a".format(env["platform"], env["target"]),
             source=sources,
         )
     else:
         library = env.StaticLibrary(
-            "demo/bin/libvideoplayer.{}.{}.a".format(env["platform"], env["target"]),
+            "demo/bin/libvideo.{}.{}.a".format(env["platform"], env["target"]),
             source=sources,
         )
 else:
     library = env.SharedLibrary(
-        "demo/bin/libvideoplayer{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "demo/bin/libvideo{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
