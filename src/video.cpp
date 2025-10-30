@@ -154,7 +154,7 @@ void Video::open_video(String _path){
 	//set other variables
 	stream_time_base_video = av_q2d(av_stream_video->time_base) * 1000.0 * 10000.0; //converting from timebase to ticks
 	start_time_video = av_stream_video->start_time != AV_NOPTS_VALUE ? (long)(av_stream_video->start_time * stream_time_base_video): 0;
-	average_frame_duration = 10000000.0 / av_q2d(av_stream_video->avg_frame_rate); // 1s / 25fps = 400 ticks (40ms)
+	average_frame_duration = 10000000.0 / av_q2d(av_stream_video->r_frame_rate); // 1s / 25fps = 400 ticks (40ms)
 	
 	_get_total_frame_nr();
 

@@ -32,13 +32,9 @@ func _ready() -> void:
 		framerate = video.get_avg_framerate()
 		frame_time = 1.0 / framerate #in seconds
 		
-		file_last_frame = video.get_total_frame_nr()
-		audio_last_frame = audio_player.stream.get_length()*framerate
-		max_frame = file_last_frame#min(audio_last_frame, file_last_frame)
-		print(file_last_frame)
-		print(audio_last_frame)
-		print(max_frame)
-
+		print(audio_player.stream.mix_rate)
+		update_last_frame()
+		
 		timeline.min_value = 1
 		timeline.value = 1
 		timeline.max_value = max_frame
@@ -60,25 +56,31 @@ func _process(delta: float) -> void:
 			go_to_next_frame()
 
 func go_to_next_frame()->void:
+	
 	while time_elapsed >= frame_time:
 		time_elapsed -= frame_time
 		current_frame += 1
 	
-	
-	if current_frame >= max_frame:
-		seek_frame(1)
-		if not looping:
-			audio_player.stop()
-			is_playing = false
-	else:
-		var image : Image = video.next_frame()
-		if not image.is_empty():
-			texture_rect.texture.set_image(image)
-			current_frame += 1
+	var image : Image = video.next_frame()
+	if not image.is_empty():
+		texture_rect.texture.set_image(image)
 		
 	if not timeline_dragging:
 		timeline.value = current_frame
 		frame_label.text = str(current_frame) + " / " + str(max_frame)
+
+func update_last_frame()->void:
+	file_last_frame = video.get_total_frame_nr()
+	print("original last frame: ", file_last_frame)
+	audio_last_frame = int(audio_player.stream.get_length()*framerate)
+	max_frame = min(file_last_frame, audio_last_frame)
+	var image : Image = video.seek_frame(max_frame)
+	while not image.is_empty():
+		max_frame+=1
+		image = video.seek_frame(max_frame)
+		print('frame ', max_frame, "is empty: ", image.is_empty())
+	#max_frame -= 1
+	print(max_frame)
 
 func _on_play_pause_button_pressed() -> void:
 	
@@ -99,3 +101,10 @@ func _on_timeline_drag_ended(value_changed: bool) -> void:
 
 func _on_timeline_drag_started() -> void:
 	timeline_dragging = true
+
+
+func _on_audio_stream_player_finished() -> void:
+	seek_frame(1)
+	if not looping:
+		audio_player.stop()
+		is_playing = false
