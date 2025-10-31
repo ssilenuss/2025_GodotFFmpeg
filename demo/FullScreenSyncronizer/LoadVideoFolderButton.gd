@@ -14,6 +14,7 @@ var vid_offset := Vector2(200,200)
 var window : VideoWindow
 
 
+
 @export var root_node : VideoController
 
 func _ready() -> void:
@@ -44,8 +45,7 @@ func open_video_window()->void:
 	
 	var vb := VideoFolderButton.new()
 	vb.root_node = root_node
-	vb.position = root_node.vid_position
-	root_node.vid_position += vid_offset
+	
 	get_parent().add_child(vb)
 	
 	
@@ -55,7 +55,14 @@ func open_video_window()->void:
 	window.paths = video_paths
 	window.titles = video_titles
 	window.root_node = root_node
+	window.position = root_node.vid_position
+	root_node.vid_position += vid_offset
 	root_node.windows.add_child(window)
+	
+	var a := AudioStreamPlayer.new()
+	root_node.audio_players.add_child(a)
+	window.audio_player = a
+	a.finished.connect(window._on_audio_finished)
 
 	root_node.init_videos()
 

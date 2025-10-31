@@ -4,6 +4,8 @@ class_name VideoWindow
 var paths : PackedStringArray
 var titles : PackedStringArray
 var root_node : VideoController
+var video : Video
+var audio_player : AudioStreamPlayer
 @export var video_texture : TextureRect
 @export var overlay: VideoPlayback_UI
 
@@ -22,6 +24,9 @@ var fullscreen := false :
 		else:
 			set_mode(Window.MODE_WINDOWED)
 			#fullscreen_button.text = "FULLSCREEN"
+
+func initialize_overlay()->void:
+	overlay.initialize()
 
 func _ready() -> void:
 	video_texture.texture = ImageTexture.new()
@@ -63,6 +68,9 @@ func _ready() -> void:
 		#
 	#
 func _on_close_requested() -> void:
+	audio_player.queue_free()
+	root_node.vids.erase(video)
+	root_node.textures.erase(video_texture.texture)
 	self.queue_free()
 #
 #
@@ -87,3 +95,10 @@ func _on_mouse_exited() -> void:
 #
 func _on_fullscreen_pressed() -> void:
 	fullscreen = !fullscreen
+	
+func _on_audio_finished()->void:
+	audio_player.stop()
+	root_node.finished_vids += 1
+	if root_node.finished_vids >= root_node.vids.size():
+		root_node.all_vids_over()
+	

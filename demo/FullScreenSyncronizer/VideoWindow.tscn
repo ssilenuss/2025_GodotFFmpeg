@@ -21,8 +21,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("ImageTexture_bdebs")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="UI" type="Control" parent="." node_paths=PackedStringArray("video_playback", "play_button", "timeline", "container", "total_time_label", "current_time_label")]
+[node name="UI" type="Control" parent="." node_paths=PackedStringArray("window", "play_button", "timeline", "container", "total_time_label", "current_time_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +32,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_dealp")
-video_playback = NodePath("../VideoPlayback")
+window = NodePath("..")
 play_button = NodePath("Container/VBoxContainer/HBoxContainer/PlayPause")
 timeline = NodePath("Container/VBoxContainer/HSlider")
 container = NodePath("Container")

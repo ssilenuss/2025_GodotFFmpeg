@@ -562,10 +562,10 @@ Ref<Image> Video::next_frame(){
 void Video::_get_total_frame_nr(){
 
 
+	total_frame_nr = av_stream_video->nb_frames;
 
-
-	if (av_stream_video->nb_frames > 500){ 
-		total_frame_nr = av_stream_video->nb_frames - 30;}
+	//if (av_stream_video->nb_frames > 500){ 
+		//total_frame_nr = av_stream_video->nb_frames - 30;}
 	
 	av_packet = av_packet_alloc();
 	av_frame = av_frame_alloc();

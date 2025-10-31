@@ -1,7 +1,7 @@
 extends Control
 class_name VideoPlayback_UI
 
-@export var video_playback : VideoPlayback
+@export var window : VideoWindow
 @export var play_button : Button
 @export var timeline : HSlider
 @export var container : Container
@@ -20,23 +20,31 @@ func _ready() -> void:
 	
 	play_button.pressed.connect(_on_play_button_pressed)
 	
-
-func _process(_delta: float) -> void:
-	pass
-	#if not timeline_dragging: #and video_playback.is_playing:
-		#timeline.value = video_playback.current_frame
-		#current_time_label.text = timebase_convert(int(timeline.value))
-
-func _on_video_opened()->void:
+func initialize()->void:
+	print(window, " overlay initialized")
+	
+	var framerate: float = window.video.get_r_framerate()
+	var frames: int = int (window.audio_player.stream.get_length()*framerate)
 	timeline.min_value = 1
-	timeline.max_value = video_playback.max_frame
+	timeline.max_value = frames
 	timeline.value = 1
 	
-	total_time_label.text = " / " + timebase_convert(video_playback.max_frame)
-	current_time_label.text = timebase_convert(video_playback.current_frame)
+	total_time_label.text = " / " + timebase_convert(frames)
+	current_time_label.text = timebase_convert(window.root_node.current_frame)
+	print(timebase_convert(frames))
+	print(timeline.max_value)
+	
+
+func _process(_delta: float) -> void:
+
+	if not timeline_dragging:
+		timeline.value = window.root_node.current_frame
+		current_time_label.text = timebase_convert(int(timeline.value))
+
+
 	
 func timebase_convert(_frame: int)->String:
-	var fr : float = video_playback.framerate
+	var fr : float = window.video.get_r_framerate()
 	var seconds: int = int( _frame/fr )
 	var time_string: String = ""
 	var h : int = int(seconds / 3600.0)
@@ -55,8 +63,8 @@ func timebase_convert(_frame: int)->String:
 	return time_string
 
 func _on_play_button_pressed()->void:
-	print("play pressed")
-	video_playback._on_play_pause()
+	window.root_node._on_play_button_pressed()
+	
 	
 func _on_timeline_drag_started()->void:
 	timeline_dragging = true
@@ -65,8 +73,10 @@ func _on_timeline_drag_ended(_value_changed: bool)->void:
 	timeline_dragging = false
 	if !_value_changed:
 		return
-	video_playback.seek_frame(int(timeline.value))
-	timeline.value = video_playback.current_frame
+	window.root_node.seek_frame(int(timeline.value))
+	timeline.value = window.root_node.current_frame
+	#video_playback.seek_frame(int(timeline.value))
+	#timeline.value = video_playback.current_frame
 	current_time_label.text = timebase_convert(int(timeline.value))
 	
 
