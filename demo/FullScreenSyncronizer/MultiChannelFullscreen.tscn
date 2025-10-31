@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cuimgf5movqod" path="res://FullScreenSyncronizer/MultiChannelFullScreen.gd" id="1_2ye8d"]
 [ext_resource type="Script" uid="uid://cgnbmhfjapbei" path="res://FullScreenSyncronizer/LoadVideoFolderButton.gd" id="3_nmhsd"]
 
-[node name="MultiChannelFullscreen" type="Control" node_paths=PackedStringArray("video_num_label", "windows", "folder_a", "folder_b", "looping_button")]
+[node name="MultiChannelFullscreen" type="Control" node_paths=PackedStringArray("video_num_label", "windows", "looping_button", "audio_players")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,9 +14,8 @@ script = ExtResource("1_2ye8d")
 video_num_label = NodePath("VBoxContainer/VideoNumLabel")
 test_path = "/Users/kmt/Documents/Github/2025_SyncVidProjectionMapper/Videos/test0.ogv"
 windows = NodePath("Windows")
-folder_a = NodePath("VBoxContainer/MarginContainer/Videos/HBoxContainer/LoadFolder")
-folder_b = NodePath("VBoxContainer/MarginContainer/Videos/HBoxContainer/LoadFolder2")
 looping_button = NodePath("VBoxContainer/Looping")
+audio_players = NodePath("AudioPlayers")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -77,14 +76,6 @@ text = "LOAD VIDEO
 script = ExtResource("3_nmhsd")
 root_node = NodePath("../../../../..")
 
-[node name="LoadFolder2" type="Button" parent="VBoxContainer/MarginContainer/Videos/HBoxContainer" node_paths=PackedStringArray("root_node")]
-layout_mode = 2
-size_flags_vertical = 4
-text = "LOAD VIDEO
-"
-script = ExtResource("3_nmhsd")
-root_node = NodePath("../../../../..")
-
 [node name="VideoNumLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Current_Video: "
@@ -99,6 +90,8 @@ layout_mode = 2
 text = "PLAY"
 
 [node name="Windows" type="Node" parent="."]
+
+[node name="AudioPlayers" type="Node" parent="."]
 
 [connection signal="pressed" from="VBoxContainer/Looping" to="." method="_on_looping_pressed"]
 [connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

@@ -4,7 +4,8 @@ class_name VideoWindow
 var paths : PackedStringArray
 var titles : PackedStringArray
 var root_node : VideoController
-@export var video_playback : VideoPlayback
+@export var video_texture : TextureRect
+@export var overlay: VideoPlayback_UI
 
 @export var vid_idx : int :
 	set(value):
@@ -23,7 +24,7 @@ var fullscreen := false :
 			#fullscreen_button.text = "FULLSCREEN"
 
 func _ready() -> void:
-	title = titles[0]
+	video_texture.texture = ImageTexture.new()
 	pass
 	#player = VideoStreamPlayer.new()
 	#if file:
@@ -61,28 +62,28 @@ func _ready() -> void:
 		#frame += 1
 		#
 	#
-#func _on_close_requested() -> void:
-	#self.queue_free()
+func _on_close_requested() -> void:
+	self.queue_free()
 #
 #
-#func _on_size_changed() -> void:
-	#if player:
-		#player.set_custom_minimum_size(size)
+func _on_size_changed() -> void:
+	if video_texture:
+		video_texture.set_custom_minimum_size(size)
 		#print(size, player.size)
 #
 #
-#func _on_mouse_entered() -> void:
-	#root_node.hover_vw = self
+func _on_mouse_entered() -> void:
+	root_node.hover_vw = self
+	
+	if root_node.mouse_hidden:
+		return
 	#
-	#if root_node.mouse_hidden:
-		#return
-	#
-	#overlay.visible = true
+	overlay.visible = true
 #
 #
-#func _on_mouse_exited() -> void:
-	#overlay.visible = false
+func _on_mouse_exited() -> void:
+	overlay.visible = false
 #
 #
-#func _on_fullscreen_pressed() -> void:
-	#fullscreen = !fullscreen
+func _on_fullscreen_pressed() -> void:
+	fullscreen = !fullscreen

@@ -25,8 +25,8 @@ extern "C" {
 
 namespace godot {
 
-class Video : public Resource {
-	GDCLASS(Video, Resource);
+class Video : public Object {
+	GDCLASS(Video, Object);
 
 private:
 	AVFormatContext* av_format_ctx;

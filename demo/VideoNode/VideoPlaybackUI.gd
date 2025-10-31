@@ -22,9 +22,10 @@ func _ready() -> void:
 	
 
 func _process(_delta: float) -> void:
-	if not timeline_dragging and video_playback.is_playing:
-		timeline.value = video_playback.current_frame
-		current_time_label.text = timebase_convert(int(timeline.value))
+	pass
+	#if not timeline_dragging: #and video_playback.is_playing:
+		#timeline.value = video_playback.current_frame
+		#current_time_label.text = timebase_convert(int(timeline.value))
 
 func _on_video_opened()->void:
 	timeline.min_value = 1

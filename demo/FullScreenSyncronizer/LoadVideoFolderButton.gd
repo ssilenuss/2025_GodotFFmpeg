@@ -9,10 +9,9 @@ var status : String
 
 var video_window : PackedScene = preload("res://FullScreenSyncronizer/VideoWindow.tscn")
 
-var vid_position := Vector2(800,800)
+var vid_offset := Vector2(200,200)
 
-var window : Window
-
+var window : VideoWindow
 
 
 @export var root_node : VideoController
@@ -29,6 +28,7 @@ func _ready() -> void:
 	add_child(file_dialog)
 	file_dialog.dir_selected.connect(on_file_dialog_dir_selected)
 	
+	
 
 func _on_pressed()->void:
 	file_dialog.popup_centered_ratio(0.6)
@@ -37,30 +37,6 @@ func on_file_dialog_dir_selected(path:String) -> void:
 	print("folder selected: ", path)
 	load_video_paths_from_folder(path)
 	text = str(video_paths.size()) + " VIDEOS QUEUED"
-	#
-	#if path.ends_with(".ogv"):
-		#ogv_selected(path)
-	#elif path.ends_with(".mp4"):
-		#mp4_selected(path)
-	#else:
-		#print("No usable file selected")
-		
-#func mp4_selected(_path:String)->void:
-	#if window:
-		#window.queue_free()
-	#print("MP4!!! ", _path)
-	#video_path = _path
-	#text = _path
-	#
-	#var path : String = ProjectSettings.globalize_path(root_node.ffplay_path)
-#
-	#var arguments : PackedStringArray = ["-i", video_path]
-	#var output : Array = []
-	#var exit_code : int = OS.execute(path, arguments)
-	#if exit_code == 0:
-		#print("ffplay finished successfully.")
-	#else:
-		#print("ffplay encountered an error. Exit code: ", exit_code)
 	
 	
 	
@@ -68,17 +44,20 @@ func open_video_window()->void:
 	
 	var vb := VideoFolderButton.new()
 	vb.root_node = root_node
+	vb.position = root_node.vid_position
+	root_node.vid_position += vid_offset
 	get_parent().add_child(vb)
+	
 	
 	if window:
 		window.queue_free()
 	window = video_window.instantiate()
 	window.paths = video_paths
 	window.titles = video_titles
-	#window.file = _file
-	#window.title = video_path
 	window.root_node = root_node
 	root_node.windows.add_child(window)
+
+	root_node.init_videos()
 
 func _recursive_dir_search(_dir: DirAccess, _dir_path: String)->void:
 	var file_name = _dir.get_next()
