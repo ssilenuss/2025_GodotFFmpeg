@@ -1,0 +1,104 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpgqiajvujr76"]
+
+[ext_resource type="Script" uid="uid://cuimgf5movqod" path="res://FullScreenSyncronizer/MultiChannelFullScreen.gd" id="1_2ye8d"]
+[ext_resource type="Script" uid="uid://cgnbmhfjapbei" path="res://FullScreenSyncronizer/LoadVideoFolderButton.gd" id="3_nmhsd"]
+
+[node name="MultiChannelFullscreen" type="Control" node_paths=PackedStringArray("video_num_label", "windows", "folder_a", "folder_b", "looping_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2ye8d")
+video_num_label = NodePath("VBoxContainer/VideoNumLabel")
+test_path = "/Users/kmt/Documents/Github/2025_SyncVidProjectionMapper/Videos/test0.ogv"
+windows = NodePath("Windows")
+folder_a = NodePath("VBoxContainer/MarginContainer/Videos/HBoxContainer/LoadFolder")
+folder_b = NodePath("VBoxContainer/MarginContainer/Videos/HBoxContainer/LoadFolder2")
+looping_button = NodePath("VBoxContainer/Looping")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="Videos" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Instructions" type="Label" parent="VBoxContainer/MarginContainer/Videos"]
+visible = false
+layout_mode = 2
+text = "Load as many videos as want.
+
+The Play button or Spacebar will reset all videos.
+
+All videos loop when shortest video finishes.
+
+\"m\" hides or reveals the mouse."
+horizontal_alignment = 1
+
+[node name="Instructions2" type="Label" parent="VBoxContainer/MarginContainer/Videos"]
+layout_mode = 2
+text = "Load as many videos as want.
+
+Spacebare Starts/Stops
+
+Left/Right changes videos
+
+Looping loops to longest
+
+\"m\" hides or reveals the mouse."
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/Videos"]
+layout_mode = 2
+alignment = 1
+
+[node name="LoadFolder" type="Button" parent="VBoxContainer/MarginContainer/Videos/HBoxContainer" node_paths=PackedStringArray("root_node")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "LOAD VIDEO
+"
+script = ExtResource("3_nmhsd")
+root_node = NodePath("../../../../..")
+
+[node name="LoadFolder2" type="Button" parent="VBoxContainer/MarginContainer/Videos/HBoxContainer" node_paths=PackedStringArray("root_node")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "LOAD VIDEO
+"
+script = ExtResource("3_nmhsd")
+root_node = NodePath("../../../../..")
+
+[node name="VideoNumLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Current_Video: "
+horizontal_alignment = 1
+
+[node name="Looping" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "SINGLE PLAY"
+
+[node name="PlayButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "PLAY"
+
+[node name="Windows" type="Node" parent="."]
+
+[connection signal="pressed" from="VBoxContainer/Looping" to="." method="_on_looping_pressed"]
+[connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

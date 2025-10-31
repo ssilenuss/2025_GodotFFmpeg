@@ -1,8 +1,9 @@
 extends TextureRect
 class_name VideoPlayback
 
-@export var video : Video = Video.new()
+var video : Video 
 @export var video_path : String 
+@export var window_parent :VideoWindow
 
 var audio_player : AudioStreamPlayer 
 var is_playing: bool = false
@@ -16,31 +17,43 @@ var looping : bool = false
 
 var time_elapsed: float = 0
 
+var video_size : Vector2
+
 signal video_opened
 
 func _ready() -> void:
 	#create audiostream player
+	video = Video.new()
 	audio_player = AudioStreamPlayer.new()
 	add_child(audio_player)
 	audio_player.finished.connect(_on_audio_stream_player_finished)
 	
+	video_path = window_parent.paths[0]
 	open_video(video_path)
 	
 func open_video(_path: String)->void:
 	if FileAccess.file_exists(video_path):
+		if not video_path.ends_with(".mp4") or video_path.ends_with(".mov") or video_path.ends_with(".ogv"):
+			print("file not a mp4, mov, or ogv")
+			return
+			
 		video.open_video(video_path)
 		
-		framerate = video.get_avg_framerate()
+		framerate = video.get_fps()
 		frame_time = 1.0 / framerate #in seconds
 		
 		audio_player.stream = video.get_audio()
 		audio_player.play()
 		seek_frame(1)
+		
+		video_size = texture.get_size()
+		window_parent.size = video_size
+		
 		audio_player.set_stream_paused(true)
 		
 		
 		
-		max_frame = video.get_total_frame_nr()
+		max_frame = video.get_total_frames()
 		
 		video_opened.emit()
 		

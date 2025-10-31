@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://7bhhvt14fc8x"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_c1qlr"]
+blend_mode = 2
+
+[sub_resource type="GDScript" id="GDScript_qjw4y"]
+script/source = "extends Label
+
+var time: float = 0
+
+var color_change: bool = true
+
+func _process(delta: float) -> void:
+	time += delta
+	text = str(time)
+	if int(time)%2 == 0:
+		if color_change:
+			get_parent().color = Color(randf(), randf(), randf(), 1.0)
+		color_change = false
+	else:
+		color_change = true
+	
+"
+
+[node name="TimerTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 1, 1)
+
+[node name="Label" type="Label" parent="ColorRect"]
+material = SubResource("CanvasItemMaterial_c1qlr")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TEST"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_qjw4y")

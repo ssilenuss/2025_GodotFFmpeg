@@ -1,7 +1,7 @@
-prefix=/Users/JLS/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin
+prefix=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin
 exec_prefix=${prefix}
-libdir=/Users/JLS/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/lib
-includedir=/Users/JLS/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/include
+libdir=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/lib
+includedir=/Users/kmt/Documents/Github/2025_GodotFFmpeg/FFmpeg_bin/include
 
 Name: libswresample
 Description: FFmpeg audio resampling library
