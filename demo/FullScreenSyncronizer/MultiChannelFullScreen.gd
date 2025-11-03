@@ -46,8 +46,7 @@ func _ready() -> void:
 	
 	current_video = 0
 
-func _on_final_video_end()->void:
-	pass
+
 	
 func _process(_delta: float) -> void:
 	var af : int = 0
@@ -71,6 +70,10 @@ func _process(_delta: float) -> void:
 				var img : Image = vids[i].next_frame()
 				if !img.is_empty():
 					textures[i].set_image(img)
+				else:
+					var img_black : Image = textures[i].get_image()
+					img_black.fill(Color.BLACK)
+					textures[i].set_image(img_black)
 		else:
 			for i in vids.size():
 				current_frame = af
@@ -118,9 +121,9 @@ func _on_play_button_pressed() -> void:
 		for i in audio_players.get_child_count():
 			(audio_players.get_child(i) as AudioStreamPlayer).set_stream_paused(true)
 	
-func _on_video_finished()->void:
-	playing = false
-	playing = true
+#func _on_video_finished()->void:
+	#playing = false
+	#playing = true
 
 func seek_frame(_frame: int)->void:
 	current_frame = _frame
@@ -129,6 +132,10 @@ func seek_frame(_frame: int)->void:
 		var img : Image = vids[i].seek_frame(_frame)
 		if !img.is_empty():
 			textures[i].set_image(img)
+		else:
+			var img_black : Image = textures[i].get_image()
+			img_black.fill(Color.BLACK)
+			textures[i].set_image(img_black)
 		(audio_players.get_child(i) as AudioStreamPlayer).play()
 		var audioframe: float = _frame / vids[i].get_r_framerate()
 		(audio_players.get_child(i) as AudioStreamPlayer).seek(audioframe)
@@ -140,14 +147,16 @@ func load_video(_idx: int)->void:
 	current_frame = 1
 		
 	for i in vids.size():
-		var v_path :String= (windows.get_child(i) as VideoWindow).paths[_idx]
-		var v_title : String = (windows.get_child(i) as VideoWindow).titles[_idx]
-		vids[i].open_video(v_path)
-		(audio_players.get_child(i) as AudioStreamPlayer).stream = vids[i].get_audio()
-		windows.get_child(i).title = v_title
-		windows.get_child(i).size = vids[i].seek_frame(1).get_size()
-		windows.get_child(i).video = vids[i]
-		windows.get_child(i).initialize_overlay()
+		if _idx<(windows.get_child(i) as VideoWindow).paths.size():
+			var v_path :String= (windows.get_child(i) as VideoWindow).paths[_idx]
+			var v_title : String = (windows.get_child(i) as VideoWindow).titles[_idx]
+			vids[i].open_video(v_path)
+			(audio_players.get_child(i) as AudioStreamPlayer).stream = vids[i].get_audio()
+			windows.get_child(i).title = v_title
+			vids[i].seek_frame(1)
+			#windows.get_child(i).size = vids[i].seek_frame(1).get_size()
+			windows.get_child(i).video = vids[i]
+			windows.get_child(i).initialize_overlay()
 		
 	
 	seek_frame(1)
@@ -168,7 +177,7 @@ func init_videos()->void:
 		
 		
 	load_video(current_video)
-	print("Windows: ", windows.get_child_count(), " videos: ", vids.size(), " audios: ", audio_players.get_child_count())
+	#print("Windows: ", windows.get_child_count(), " videos: ", vids.size(), " audios: ", audio_players.get_child_count())
 
 
 func _on_looping_pressed() -> void:
@@ -182,6 +191,19 @@ func all_vids_over()->void:
 	if looping:
 		playing=true
 		seek_frame(1)
+		print("looping all videos")
 	else:
+		print("all open videos finished, moving on")
+		current_frame = 1
 		current_video += 1
 		load_video(current_video)
+		
+func any_vid_still_playing()->bool:
+	var still_playing := false
+	var num_still_playing : int = 0
+	for a in audio_players.get_children():
+		if (a as AudioStreamPlayer).is_playing():
+			still_playing = true
+			num_still_playing +=1 
+	print(num_still_playing, " vids still playing")
+	return still_playing

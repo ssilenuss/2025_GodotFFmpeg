@@ -13,8 +13,7 @@ var vid_offset := Vector2(200,200)
 
 var window : VideoWindow
 
-
-
+var playlist : VBoxContainer
 @export var root_node : VideoController
 
 func _ready() -> void:
@@ -24,10 +23,14 @@ func _ready() -> void:
 	
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
-	file_dialog.root_subfolder = OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+	file_dialog.root_subfolder = OS.get_system_dir(OS.SYSTEM_DIR_DESKTOP)
 	
 	add_child(file_dialog)
 	file_dialog.dir_selected.connect(on_file_dialog_dir_selected)
+	
+	playlist = VBoxContainer.new()
+	get_parent().add_child.call_deferred(playlist)
+	print(playlist)
 	
 	
 
@@ -39,9 +42,12 @@ func on_file_dialog_dir_selected(path:String) -> void:
 	load_video_paths_from_folder(path)
 	text = str(video_paths.size()) + " VIDEOS QUEUED"
 	
+	create_playlist()
+	
 	
 	
 func open_video_window()->void:
+	
 	
 	var vb := VideoFolderButton.new()
 	vb.root_node = root_node
@@ -88,11 +94,27 @@ func load_video_paths_from_folder(path: String) -> void:
 	if dir:
 		dir.list_dir_begin()
 		_recursive_dir_search(dir, path)
+		
+	video_paths.sort()
+	video_titles.sort()
+
 	
 	if video_paths.size() >= 1:
 		open_video_window()
 	else:
 		print("An error occurred when trying to access the path: %s" % path)
 		print("Error: %s" % DirAccess.get_open_error())
+		
+	
 
+func create_playlist()->void:
+	for each in playlist.get_children():
+		each.queue_free()
+	playlist.visible = true
+	
+	for i in video_titles.size():
+		var l := Label.new()
+		l.text = video_titles[i]
+		playlist.add_child(l)
+	
 	

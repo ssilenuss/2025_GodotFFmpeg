@@ -68,6 +68,7 @@ func _ready() -> void:
 		#
 	#
 func _on_close_requested() -> void:
+	root_node.playing = false
 	audio_player.queue_free()
 	root_node.vids.erase(video)
 	root_node.textures.erase(video_texture.texture)
@@ -98,7 +99,8 @@ func _on_fullscreen_pressed() -> void:
 	
 func _on_audio_finished()->void:
 	audio_player.stop()
-	root_node.finished_vids += 1
-	if root_node.finished_vids >= root_node.vids.size():
+	if root_node.any_vid_still_playing():
+		return
+	else:
 		root_node.all_vids_over()
 	

@@ -13,6 +13,7 @@ config_version=5
 config/name="FFmpeg Video Player Demo"
 config/description="Following Voylin's GameDev Journey to create an FFmpeg-based video player in Godot"
 config/version="2025.10.23"
+run/main_scene="uid://dpgqiajvujr76"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="FFmpegGodot"
 config/features=PackedStringArray("4.5", "Mobile")
@@ -38,3 +39,4 @@ hide_mouse={
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
