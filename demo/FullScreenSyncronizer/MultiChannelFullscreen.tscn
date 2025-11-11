@@ -12,7 +12,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2ye8d")
 video_num_label = NodePath("ScrollContainer/VBoxContainer/VideoNumLabel")
-test_path = "/Users/kmt/Documents/Github/2025_SyncVidProjectionMapper/Videos/test0.ogv"
 windows = NodePath("Windows")
 looping_button = NodePath("ScrollContainer/VBoxContainer/Looping")
 audio_players = NodePath("AudioPlayers")
@@ -98,5 +97,10 @@ text = "PLAY"
 
 [node name="AudioPlayers" type="Node" parent="."]
 
+[node name="OverlayTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Looping" to="." method="_on_looping_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="timeout" from="OverlayTimer" to="." method="_on_overlay_timer_timeout"]

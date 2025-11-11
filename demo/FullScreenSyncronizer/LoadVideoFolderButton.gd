@@ -14,7 +14,13 @@ var vid_offset := Vector2(200,200)
 var window : VideoWindow
 
 var playlist : VBoxContainer
+
+var test_dir_a : String
+var test_dir_b : String
+
 @export var root_node : VideoController
+
+var initialized := false
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)
@@ -32,6 +38,11 @@ func _ready() -> void:
 	get_parent().add_child.call_deferred(playlist)
 	print(playlist)
 	
+
+	
+
+
+	
 	
 
 func _on_pressed()->void:
@@ -47,7 +58,6 @@ func on_file_dialog_dir_selected(path:String) -> void:
 	
 	
 func open_video_window()->void:
-	
 	
 	var vb := VideoFolderButton.new()
 	vb.root_node = root_node

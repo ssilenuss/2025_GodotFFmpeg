@@ -2,10 +2,12 @@ extends Control
 class_name VideoController
 
 @export var video_num_label : Label
-@export_global_file() var test_path: String
+
 @export var windows : Node
 @export var looping_button : Button
 @export var audio_players : Node
+
+
 
 var vids : Array [Video] = []
 
@@ -20,9 +22,12 @@ var max_videos : int = 0
 
 var finished_vids : int = 0
 
+var exhib_dir_a: String
+var exhib_dir_b: String
+
 var current_video: int :  
 	set(value):
-		current_video = clampi(value, 0, max_videos)
+		current_video = wrapi(value, 0, max_videos)
 		video_num_label.text = "Current Video: " + str(current_video)
 
 		
@@ -45,6 +50,31 @@ func _ready() -> void:
 	get_viewport().set_embedding_subwindows(false)
 	
 	current_video = 0
+	
+		#only for foundations exhibition	
+	exhib_dir_a = OS.get_system_dir(OS.SYSTEM_DIR_DESKTOP)+"/Ea"
+	exhib_dir_b = OS.get_system_dir(OS.SYSTEM_DIR_DESKTOP)+"/Eb"
+	var load0 : VideoFolderButton = $ScrollContainer/VBoxContainer/MarginContainer/Videos/HBoxContainer.get_child(0)
+	load0.on_file_dialog_dir_selected(exhib_dir_a)
+	#await get_tree().create_timer(1.0).timeout
+	var load1 : VideoFolderButton = $ScrollContainer/VBoxContainer/MarginContainer/Videos/HBoxContainer.get_child(1)
+	load1.on_file_dialog_dir_selected(exhib_dir_b)
+	var w0 : VideoWindow = $Windows.get_child(0)
+	var w1 : VideoWindow = $Windows.get_child(1)
+	DisplayServer.window_set_current_screen(0, w0.get_window_id())
+	DisplayServer.window_set_current_screen(1, w1.get_window_id())
+	w0.set_mode(Window.MODE_EXCLUSIVE_FULLSCREEN)
+	w1.set_mode(Window.MODE_EXCLUSIVE_FULLSCREEN)
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	w0.overlay.visible = false
+	w1.overlay.visible = false
+	_on_play_button_pressed()
+	
+	
+	
+	
+
+		
 
 
 	
@@ -64,20 +94,24 @@ func _process(_delta: float) -> void:
 				
 		elif current_frame == af:
 			pass
-		elif current_frame == af - 1:
+		elif current_frame < af:
 			for i in vids.size():
+				#var lag : int = af- current_frame
+				var img : Image
+				img = vids[i].next_frame()
+					
 				current_frame = af
-				var img : Image = vids[i].next_frame()
+				#var img : Image = vids[i].next_frame()
 				if !img.is_empty():
 					textures[i].set_image(img)
 				else:
 					var img_black : Image = textures[i].get_image()
 					img_black.fill(Color.BLACK)
 					textures[i].set_image(img_black)
-		else:
-			for i in vids.size():
-				current_frame = af
-				seek_frame(current_frame)
+		#else:
+			#for i in vids.size():
+				#current_frame = af
+				#seek_frame(current_frame)
 		#var audio_frames : PackedInt32Array = []
 		#for i in audio_players.get_child_count():
 			#if (audio_players.get_child(i) as AudioStreamPlayer).is_playing():
@@ -106,6 +140,9 @@ func _process(_delta: float) -> void:
 		else:
 			if hover_vw.fullscreen:
 				hover_vw.fullscreen = false
+	
+	if Input.is_action_just_pressed("ui_cancel"):
+		get_tree().quit()
 		
 func _on_play_button_pressed() -> void:
 	playing = !playing
@@ -207,3 +244,10 @@ func any_vid_still_playing()->bool:
 			num_still_playing +=1 
 	print(num_still_playing, " vids still playing")
 	return still_playing
+
+
+func _on_overlay_timer_timeout() -> void:
+	for w in $Windows.get_children():
+		(w as VideoWindow).overlay.visible = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		

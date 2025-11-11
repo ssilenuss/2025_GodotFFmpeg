@@ -25,6 +25,7 @@ expand_mode = 5
 stretch_mode = 5
 
 [node name="UI" type="Control" parent="." node_paths=PackedStringArray("window", "play_button", "timeline", "container", "total_time_label", "current_time_label")]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
